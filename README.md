@@ -66,6 +66,8 @@ go run ./cmd/podpocalypse
 Open http://127.0.0.1:8080. The Temporal Web UI is http://127.0.0.1:8233.
 Set `TEMPORAL_UI_URL=http://127.0.0.1:8233` if you want the in-game link.
 
+To present the demo, follow [RUNBOOK.md](RUNBOOK.md): the walkthrough beat by beat, and where in the code each part happens.
+
 Leads are appended to `LEAD_PATH` (one JSON object per finished game) and also
 kept on the player workflow. `GET /api/prize` returns the winner's email when
 `ADMIN_TOKEN` is set and the request sends `Authorization: Bearer <token>`.
