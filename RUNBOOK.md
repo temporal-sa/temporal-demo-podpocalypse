@@ -398,7 +398,7 @@ When someone asks what they'd change for their own system, these are the parts t
 | "the session worker did not start" | The flight's Worker didn't poll within 25 seconds: the process couldn't start, or on Kubernetes the pod wasn't scheduled or the image didn't pull | Check the booth log; on Kubernetes, `kubectl -n podpocalypse get pods` |
 | A crash shows "Standby pod deploying" and nothing is deleted | The player had a STANDBY perk | Expected; crash again without one |
 | No Worker name in the bottom-left corner | The window is 720 pixels wide or less, or 520 pixels tall or less | Use a larger window, or show the name in the Temporal UI |
-| No **Open the workflow** link on the result screen | `TEMPORAL_UI_URL` isn't set; the tmprl-demo.cloud catalog entry doesn't set it | Open the Namespace in the Temporal UI and search for `session-<session>` |
+| No **Open the workflow** link on the result screen | `TEMPORAL_UI_URL` isn't set. The demo platform injects it and `TEMPORAL_UI_NAMESPACE`; a local run doesn't | Open the Namespace in the Temporal UI and search for `session-<session>` |
 | Standings stay empty after finished flights | The `leaderboard` Workflow isn't running | Restart the booth; it starts the leaderboard at startup |
 | "that flight code is not valid" or "that flight code was already used" | A wrong, expired or reused code on an event page | Have the player finish the form on their phone again |
 | "this booth is not connected to the event tracker" | `EVENT_LEADS_ENDPOINT` isn't set | Expected locally; use the open booth form |

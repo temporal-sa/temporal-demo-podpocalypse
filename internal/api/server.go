@@ -119,7 +119,7 @@ func (s *Server) health(w http.ResponseWriter, r *http.Request) {
 func (s *Server) meta(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{
 		"temporalUI":      strings.TrimRight(s.Config.TemporalUI, "/"),
-		"namespace":       s.Config.TemporalNamespace,
+		"namespace":       s.Config.UINamespace,
 		"durationSeconds": int(s.Config.GameDuration / time.Second),
 		"minGateMs":       int(game.MinGateInterval / time.Millisecond),
 		"treatSeconds":    int(game.TreatBonus / time.Second),

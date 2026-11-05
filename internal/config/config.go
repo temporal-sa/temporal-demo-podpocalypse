@@ -27,6 +27,7 @@ type Config struct {
 	TemporalTLSKey    string
 	TemporalTLSServer string
 	TemporalUI        string
+	UINamespace       string // the namespace Temporal UI links open
 	ControlQueue      string
 	TaskQueue         string
 	SessionID         string
@@ -55,6 +56,7 @@ func FromEnv() (Config, error) {
 		TemporalTLSKey:    os.Getenv("TEMPORAL_TLS_KEY"),
 		TemporalTLSServer: os.Getenv("TEMPORAL_TLS_SERVER_NAME"),
 		TemporalUI:        os.Getenv("TEMPORAL_UI_URL"),
+		UINamespace:       env("TEMPORAL_UI_NAMESPACE", env("TEMPORAL_NAMESPACE", "default")),
 		ControlQueue:      env("CONTROL_TASK_QUEUE", DefaultControlQueue),
 		TaskQueue:         os.Getenv("TASK_QUEUE"),
 		SessionID:         os.Getenv("SESSION_ID"),
