@@ -183,13 +183,13 @@
     .queue .go { margin-top: 8px; padding: 8px 14px; min-height: 44px; }
     body.event .worker { left: 28px; bottom: auto; top: 22px; }
     /* Live from the cluster: k9s and the flight's Event History, a strip along
-       the bottom between the queue and the standings. Tall enough for k9s to
-       show a deleted pod and its replacement together, so its top can reach a
-       little into the lowest gate openings; it stays translucent there. Taps
-       fall through to the game. */
+       the bottom between the queue and the standings. It lines up with the QR
+       panel beside it: same bottom, same height (set from the panel in
+       ops.place(); 154px is the panel's size with its 132px code). Taps fall
+       through to the game. */
     .ops {
-      position: fixed; z-index: 4; bottom: 12px; left: var(--ops-left, 16px); right: 268px;
-      height: clamp(124px, 16vh, 196px);
+      position: fixed; z-index: 4; bottom: 16px; left: var(--ops-left, 16px); right: 268px;
+      height: var(--ops-height, 154px);
       display: flex; gap: 10px; pointer-events: none;
     }
     .ops-pane {
@@ -1873,8 +1873,15 @@
 
       function place() {
         const queueBox = document.querySelector("#queue");
-        const left = queueBox.classList.contains("hidden") ? 16 : queueBox.getBoundingClientRect().right + 10;
-        panel.style.setProperty("--ops-left", left + "px");
+        if (queueBox.classList.contains("hidden")) {
+          panel.style.setProperty("--ops-left", "16px");
+          panel.style.removeProperty("--ops-height");
+        } else {
+          const box = queueBox.getBoundingClientRect();
+          panel.style.setProperty("--ops-left", box.right + 10 + "px");
+          panel.style.setProperty("--ops-height", box.height + "px");
+        }
+        sizeTerm();
       }
       const shortWorker = (id) => (id || "").replace(/^\d+@/, "").replace(/@$/, "");
 
@@ -1884,8 +1891,9 @@
         if (!term) return;
         // Eight rows: k9s's info line, the table's borders and header, the
         // session pods (two while one is replaced), its status line, and one
-        // spare, since a cell is a little taller than its font size.
-        term.options.fontSize = Math.max(8, Math.min(14, Math.floor(termBox.clientHeight / 8 / 1.25)));
+        // spare, since a cell is a little taller than its font size. Then 15%
+        // smaller than that, so the table sits with room to spare.
+        term.options.fontSize = Math.max(8, Math.min(12, Math.floor(termBox.clientHeight / 8 / 1.25 * 0.85)));
         try { fit.fit(); } catch (e) { /* not laid out yet */ }
         if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type: "resize", cols: term.cols, rows: term.rows }));
       }
