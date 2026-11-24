@@ -61,9 +61,10 @@ one long-lived worker pod (`ROLE=session`, `TASK_QUEUE=podpocalypse-sessions`).
 crash deletes that pod by UID, picked by `SESSION_POD_SELECTOR` (default
 `app.kubernetes.io/component=sessions`), and its Deployment starts a
 replacement. Every flight in progress loses its worker at once, which is what
-happens to every Workflow on a Worker that dies. The booth needs `get`, `list`,
-`watch` and `delete` on pods in its namespace. In the catalog that is a manual
-step for now: see [deploy/catalog/README.md](deploy/catalog/README.md).
+happens to every Workflow on a Worker that dies. The booth needs to list,
+watch and delete the session pods in its namespace. In the catalog the
+DemoProject grants that with `kubernetesAccess`: see
+[deploy/catalog/README.md](deploy/catalog/README.md).
 
 ## What the screen shows
 
