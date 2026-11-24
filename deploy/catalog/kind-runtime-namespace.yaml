@@ -1,7 +1,10 @@
 # A local stand-in for one catalog runtime namespace, for kind: the operator's
 # pod labels, a ServiceAccount per component, no POD_NAMESPACE or POD_NAME,
 # and a token mounted only in the booth. The dev server stands in for Temporal
-# Cloud. RBAC comes from grant-crash-rbac.sh, as in the catalog.
+# Cloud. The booth's Role and RoleBinding are the ones the operator renders
+# for kubernetesAccess {observe: true, crash: [sessions]}. kind has no
+# platform admission policy, so here the booth could delete any pod in the
+# namespace; in the catalog it may delete only the sessions pods.
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -14,6 +17,20 @@ metadata: {name: booth, namespace: fieldkit-podpocalypse-abcde}
 apiVersion: v1
 kind: ServiceAccount
 metadata: {name: sessions, namespace: fieldkit-podpocalypse-abcde}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: {name: kube-access-booth, namespace: fieldkit-podpocalypse-abcde}
+rules:
+  - {apiGroups: [""], resources: [pods, pods/log, events], verbs: [get, list, watch]}
+  - {apiGroups: [apps], resources: [deployments, replicasets], verbs: [get, list, watch]}
+  - {apiGroups: [""], resources: [pods], verbs: [delete]}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: {name: kube-access-booth, namespace: fieldkit-podpocalypse-abcde}
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: Role, name: kube-access-booth}
+subjects: [{kind: ServiceAccount, name: booth, namespace: fieldkit-podpocalypse-abcde}]
 ---
 apiVersion: v1
 kind: Service
